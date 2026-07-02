@@ -1,121 +1,180 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'theme/app_theme.dart';
+import 'widgets/drop_zone.dart';
+import 'widgets/image_grid.dart';
+import 'widgets/control_panel.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ImageMergerApp());
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+class ImageMergerApp extends StatelessWidget {
+  const ImageMergerApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: .fromSeed(seedColor: Colors.deepPurple),
+    return ProviderScope(
+      child: MaterialApp(
+        title: 'Image Grid Merger',
+        theme: AppTheme.darkTheme,
+        debugShowCheckedModeBanner: false,
+        home: const ImageMergerHomePage(),
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+class ImageMergerHomePage extends StatelessWidget {
+  const ImageMergerHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
+    // 画面サイズに基づきレスポンシブなUIを判定する
+    final isWideScreen = MediaQuery.of(context).size.width > 900;
+
     return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: .center,
-          children: [
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: Stack(
+        children: [
+          // 1. 深みのある美しい背景グラデーション
+          Positioned.fill(
+            child: Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF0F0C20),
+                    Color(0xFF15102A),
+                    Color(0xFF0A0716),
+                  ],
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                ),
+              ),
             ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
+          ),
+          // ネオンの光が背後に差し込むようなエフェクト
+          Positioned(
+            top: -150,
+            left: -150,
+            child: Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.accentColor.withAlpha(30),
+                    blurRadius: 150,
+                    spreadRadius: 50,
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: -150,
+            right: -150,
+            child: Container(
+              width: 400,
+              height: 400,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+                boxShadow: [
+                  BoxShadow(
+                    color: AppTheme.secondaryAccent.withAlpha(30),
+                    blurRadius: 150,
+                    spreadRadius: 50,
+                  ),
+                ],
+              ),
+            ),
+          ),
+
+          // 2. メインコンテンツ
+          SafeArea(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                // アプリケーションバー風のタイトルエリア
+                Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  child: Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                          color: AppTheme.accentColor.withAlpha(40),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: AppTheme.accentColor.withAlpha(100)),
+                        ),
+                        child: const Icon(Icons.grid_on, color: AppTheme.secondaryAccent),
+                      ),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'Image Grid Merger',
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: 2),
+                          Text(
+                            '直感的で高品質な画像結合ツール',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                
+                // コンテンツ本体のレイアウト
+                Expanded(
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    child: isWideScreen 
+                        ? Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // 左カラム：操作エリアとグリッドプレビュー
+                              Expanded(
+                                flex: 3,
+                                child: Column(
+                                  children: [
+                                    const DropZone(),
+                                    const SizedBox(height: 24),
+                                    const ImageGrid(),
+                                    const SizedBox(height: 40),
+                                  ],
+                                ),
+                              ),
+                              const SizedBox(width: 24),
+                              // 右カラム：設定パネル（スクロール追従・固定長）
+                              const SizedBox(
+                                width: 360,
+                                child: ControlPanel(),
+                              ),
+                            ],
+                          )
+                        : Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: const [
+                              DropZone(),
+                              SizedBox(height: 20),
+                              ControlPanel(),
+                              SizedBox(height: 24),
+                              ImageGrid(),
+                              SizedBox(height: 40),
+                            ],
+                          ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
