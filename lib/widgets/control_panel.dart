@@ -85,10 +85,18 @@ class ControlPanel extends ConsumerWidget {
           20,
         );
 
-        await Share.shareXFiles(
+        final result = await Share.shareXFiles(
           [xFile], 
           sharePositionOrigin: rect,
         );
+
+        if (result.status == ShareResultStatus.success) {
+          if (context.mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('画像の共有が完了しました。')),
+            );
+          }
+        }
       } else {
         // デスクトップでの保存ファイルダイアログ
         final outputFile = await FilePicker.platform.saveFile(
