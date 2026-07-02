@@ -75,7 +75,20 @@ class ControlPanel extends ConsumerWidget {
         await file.writeAsBytes(bytes);
 
         final xFile = XFile(file.path, mimeType: state.format == OutputFormat.png ? 'image/png' : 'image/jpeg');
-        await Share.shareXFiles([xFile], text: '結合された画像');
+        
+        // iPadでのポップオーバー表示エラーを回避するため、画面中央の位置を指定
+        final screenSize = MediaQuery.of(context).size;
+        final rect = Rect.fromLTWH(
+          screenSize.width / 2 - 10,
+          screenSize.height / 2 - 10,
+          20,
+          20,
+        );
+
+        await Share.shareXFiles(
+          [xFile], 
+          sharePositionOrigin: rect,
+        );
       } else {
         // デスクトップでの保存ファイルダイアログ
         final outputFile = await FilePicker.platform.saveFile(
