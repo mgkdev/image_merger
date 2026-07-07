@@ -106,9 +106,6 @@ class ImageMergerNotifier extends StateNotifier<ImageMergerState> {
   /// 画像リストの順序を入れ替える
   void reorderImages(int oldIndex, int newIndex) {
     final list = List<ImageModel>.from(state.images);
-    if (oldIndex < newIndex) {
-      newIndex -= 1;
-    }
     final item = list.removeAt(oldIndex);
     list.insert(newIndex, item);
     state = state.copyWith(images: list);
