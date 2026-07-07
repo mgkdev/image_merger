@@ -62,6 +62,7 @@ class ImageGrid extends ConsumerWidget {
           child: ReorderableGridView.builder(
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
+            dragStartDelay: Duration.zero, // 長押し不要で即時ドラッグ開始にする
             gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: state.columnCount,
               crossAxisSpacing: state.margin.toDouble(),
