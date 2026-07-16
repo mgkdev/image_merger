@@ -1,4 +1,4 @@
-import 'dart:typed_data';
+// ignore_for_file: deprecated_member_use
 import 'package:flutter/foundation.dart';
 import 'package:image/image.dart' as img;
 import 'package:flutter/material.dart' show Color;

@@ -56,11 +56,13 @@ class ControlPanel extends ConsumerWidget {
       final ext = state.format == OutputFormat.png ? 'png' : 'jpg';
       final fileName = 'merged_image_${DateTime.now().millisecondsSinceEpoch}.$ext';
 
+      if (!context.mounted) return;
+
       if (kIsWeb) {
         // Webでのダウンロード
         final blob = html.Blob([bytes]);
         final url = html.Url.createObjectUrlFromBlob(blob);
-        final anchor = html.AnchorElement(href: url)
+        html.AnchorElement(href: url)
           ..setAttribute("download", fileName)
           ..click();
         html.Url.revokeObjectUrl(url);
@@ -76,6 +78,7 @@ class ControlPanel extends ConsumerWidget {
 
         final xFile = XFile(file.path, mimeType: state.format == OutputFormat.png ? 'image/png' : 'image/jpeg');
         
+        if (!context.mounted) return;
         // iPadでのポップオーバー表示エラーを回避するため、画面中央の位置を指定
         final screenSize = MediaQuery.of(context).size;
         final rect = Rect.fromLTWH(
@@ -108,6 +111,7 @@ class ControlPanel extends ConsumerWidget {
         if (outputFile != null) {
           final file = File(outputFile);
           await file.writeAsBytes(bytes);
+          if (!context.mounted) return;
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text('画像を保存しました: ${file.path}')),
           );
@@ -115,6 +119,7 @@ class ControlPanel extends ConsumerWidget {
       }
     } catch (e) {
       debugPrint('Export error: $e');
+      if (!context.mounted) return;
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('保存中にエラーが発生しました: $e')),
       );
