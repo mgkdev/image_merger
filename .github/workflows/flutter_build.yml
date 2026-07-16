@@ -61,9 +61,17 @@ jobs:
         run: flutter pub get
 
       - name: Verify code formatting
-        # コードの自動整形ルールに違反しているコミットを検知
-        run: dart format --output=none --set-exit-if-changed .
+        # 実際にフォーマットを適用し、git diff で崩れている箇所をログに出力して可視化します
+        run: |
+          dart format .
+          git diff --color
+          git diff --quiet --exit-code
         continue-on-error: true
+
+      - name: Revert formatting changes
+        # 後続ステップがクリーンなオリジナルコードで実行されるよう作業ツリーを復元します
+        if: always()
+        run: git checkout -- .
 
       - name: Verify static analysis
         # warningやinfoは許容し、コンパイル不能な致命的エラー（error）のみでCIを失敗させる
