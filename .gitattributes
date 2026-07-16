@@ -1,0 +1,7 @@
+# Ensure line endings are always LF for configuration and source files to prevent hash mismatch and format check warnings in GitHub Actions across OSs (Windows/Linux)
+*.dart text eol=lf
+pubspec.yaml text eol=lf
+pubspec.lock text eol=lf
+.fvmrc text eol=lf
+analysis_options.yaml text eol=lf
+.github/workflows/*.yml text eol=lf
