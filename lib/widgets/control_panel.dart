@@ -16,19 +16,27 @@ class ControlPanel extends ConsumerWidget {
   const ControlPanel({super.key});
 
   // 背景色変更用のダイアログを表示
-  void _showColorPicker(BuildContext context, WidgetRef ref, Color currentColor) {
+  void _showColorPicker(
+    BuildContext context,
+    WidgetRef ref,
+    Color currentColor,
+  ) {
     showDialog(
       context: context,
       builder: (dialogContext) {
         return AlertDialog(
           title: const Text('背景色を選択'),
           backgroundColor: AppTheme.backgroundColor,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(16),
+          ),
           content: SingleChildScrollView(
             child: BlockPicker(
               pickerColor: currentColor,
               onColorChanged: (color) {
-                ref.read(imageMergerProvider.notifier).updateBackgroundColor(color);
+                ref
+                    .read(imageMergerProvider.notifier)
+                    .updateBackgroundColor(color);
                 Navigator.of(dialogContext).pop();
               },
             ),
@@ -44,9 +52,9 @@ class ControlPanel extends ConsumerWidget {
     final notifier = ref.read(imageMergerProvider.notifier);
 
     if (state.images.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('画像を追加してください。')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(const SnackBar(content: Text('画像を追加してください。')));
       return;
     }
 
@@ -54,7 +62,8 @@ class ControlPanel extends ConsumerWidget {
       // 結合画像の生成
       final bytes = await notifier.generateMergedImage();
       final ext = state.format == OutputFormat.png ? 'png' : 'jpg';
-      final fileName = 'merged_image_${DateTime.now().millisecondsSinceEpoch}.$ext';
+      final fileName =
+          'merged_image_${DateTime.now().millisecondsSinceEpoch}.$ext';
 
       if (!context.mounted) return;
 
@@ -67,17 +76,22 @@ class ControlPanel extends ConsumerWidget {
           ..click();
         html.Url.revokeObjectUrl(url);
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('画像をダウンロードしました。')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(const SnackBar(content: Text('画像をダウンロードしました。')));
       } else if (Platform.isAndroid || Platform.isIOS) {
         // モバイルでの共有シート
         final tempDir = await getTemporaryDirectory();
         final file = File('${tempDir.path}/$fileName');
         await file.writeAsBytes(bytes);
 
-        final xFile = XFile(file.path, mimeType: state.format == OutputFormat.png ? 'image/png' : 'image/jpeg');
-        
+        final xFile = XFile(
+          file.path,
+          mimeType: state.format == OutputFormat.png
+              ? 'image/png'
+              : 'image/jpeg',
+        );
+
         if (!context.mounted) return;
         // iPadでのポップオーバー表示エラーを回避するため、画面中央の位置を指定
         final screenSize = MediaQuery.of(context).size;
@@ -88,16 +102,15 @@ class ControlPanel extends ConsumerWidget {
           20,
         );
 
-        final result = await Share.shareXFiles(
-          [xFile], 
-          sharePositionOrigin: rect,
-        );
+        final result = await Share.shareXFiles([
+          xFile,
+        ], sharePositionOrigin: rect);
 
         if (result.status == ShareResultStatus.success) {
           if (context.mounted) {
-            ScaffoldMessenger.of(context).showSnackBar(
-              const SnackBar(content: Text('画像の共有が完了しました。')),
-            );
+            ScaffoldMessenger.of(
+              context,
+            ).showSnackBar(const SnackBar(content: Text('画像の共有が完了しました。')));
           }
         }
       } else {
@@ -112,17 +125,17 @@ class ControlPanel extends ConsumerWidget {
           final file = File(outputFile);
           await file.writeAsBytes(bytes);
           if (!context.mounted) return;
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('画像を保存しました: ${file.path}')),
-          );
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(SnackBar(content: Text('画像を保存しました: ${file.path}')));
         }
       }
     } catch (e) {
       debugPrint('Export error: $e');
       if (!context.mounted) return;
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('保存中にエラーが発生しました: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('保存中にエラーが発生しました: $e')));
     }
   }
 
@@ -140,9 +153,9 @@ class ControlPanel extends ConsumerWidget {
           Text(
             '結合設定',
             style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: AppTheme.secondaryAccent,
-                ),
+              fontWeight: FontWeight.bold,
+              color: AppTheme.secondaryAccent,
+            ),
           ),
           const SizedBox(height: 24),
 
@@ -150,16 +163,25 @@ class ControlPanel extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('列数 (Columns)', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                '列数 (Columns)',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.accentColor.withAlpha(40),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '${state.columnCount}',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.secondaryAccent),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.secondaryAccent,
+                  ),
                 ),
               ),
             ],
@@ -177,16 +199,25 @@ class ControlPanel extends ConsumerWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('余白サイズ (Margin)', style: TextStyle(fontWeight: FontWeight.bold)),
+              const Text(
+                '余白サイズ (Margin)',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
               Container(
-                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 12,
+                  vertical: 4,
+                ),
                 decoration: BoxDecoration(
                   color: AppTheme.accentColor.withAlpha(40),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
                   '${state.margin} px',
-                  style: const TextStyle(fontWeight: FontWeight.bold, color: AppTheme.secondaryAccent),
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    color: AppTheme.secondaryAccent,
+                  ),
                 ),
               ),
             ],
@@ -228,7 +259,8 @@ class ControlPanel extends ConsumerWidget {
             children: [
               const Text('背景色', style: TextStyle(fontWeight: FontWeight.bold)),
               GestureDetector(
-                onTap: () => _showColorPicker(context, ref, state.backgroundColor),
+                onTap: () =>
+                    _showColorPicker(context, ref, state.backgroundColor),
                 child: Container(
                   width: 48,
                   height: 32,
@@ -273,12 +305,17 @@ class ControlPanel extends ConsumerWidget {
 
           // 6. エクスポートボタン
           ElevatedButton.icon(
-            onPressed: state.isProcessing ? null : () => _exportImage(context, ref),
-            icon: state.isProcessing 
+            onPressed: state.isProcessing
+                ? null
+                : () => _exportImage(context, ref),
+            icon: state.isProcessing
                 ? const SizedBox(
-                    width: 20, 
-                    height: 20, 
-                    child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(
+                      strokeWidth: 2,
+                      color: Colors.white,
+                    ),
                   )
                 : const Icon(Icons.ios_share),
             label: Text(
@@ -289,7 +326,9 @@ class ControlPanel extends ConsumerWidget {
               backgroundColor: AppTheme.accentColor,
               foregroundColor: Colors.white,
               padding: const EdgeInsets.symmetric(vertical: 16),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16),
+              ),
               elevation: 4,
               shadowColor: AppTheme.accentColor.withAlpha(150),
             ),

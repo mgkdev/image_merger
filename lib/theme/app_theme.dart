@@ -20,17 +20,21 @@ class AppTheme {
         secondary: secondaryAccent,
         surface: Color(0xFF1E1B30),
       ),
-      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme).copyWith(
-        titleLarge: GoogleFonts.outfit(
-          textStyle: const TextStyle(
-            color: textPrimaryColor,
-            fontWeight: FontWeight.bold,
-            fontSize: 22,
+      textTheme: GoogleFonts.interTextTheme(ThemeData.dark().textTheme)
+          .copyWith(
+            titleLarge: GoogleFonts.outfit(
+              textStyle: const TextStyle(
+                color: textPrimaryColor,
+                fontWeight: FontWeight.bold,
+                fontSize: 22,
+              ),
+            ),
+            bodyLarge: const TextStyle(color: textPrimaryColor, fontSize: 16),
+            bodyMedium: const TextStyle(
+              color: textSecondaryColor,
+              fontSize: 14,
+            ),
           ),
-        ),
-        bodyLarge: const TextStyle(color: textPrimaryColor, fontSize: 16),
-        bodyMedium: const TextStyle(color: textSecondaryColor, fontSize: 14),
-      ),
       sliderTheme: SliderThemeData(
         activeTrackColor: accentColor,
         inactiveTrackColor: Colors.white24,
@@ -49,10 +53,7 @@ class AppTheme {
     return BoxDecoration(
       color: color ?? cardColor,
       borderRadius: BorderRadius.circular(borderRadius),
-      border: Border.all(
-        color: borderColor ?? cardBorderColor,
-        width: 1.5,
-      ),
+      border: Border.all(color: borderColor ?? cardBorderColor, width: 1.5),
       boxShadow: [
         BoxShadow(
           color: Colors.black.withAlpha(50),

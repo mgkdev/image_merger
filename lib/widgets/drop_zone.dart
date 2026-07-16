@@ -31,7 +31,9 @@ class _DropZoneState extends ConsumerState<DropZone> {
         }
       }
       if (validFiles.isNotEmpty) {
-        await ref.read(imageMergerProvider.notifier).addImagesFromBytes(validFiles);
+        await ref
+            .read(imageMergerProvider.notifier)
+            .addImagesFromBytes(validFiles);
       }
     }
   }
@@ -50,7 +52,9 @@ class _DropZoneState extends ConsumerState<DropZone> {
           }
         }
         if (validFiles.isNotEmpty) {
-          await ref.read(imageMergerProvider.notifier).addImagesFromBytes(validFiles);
+          await ref
+              .read(imageMergerProvider.notifier)
+              .addImagesFromBytes(validFiles);
         }
       },
       onDragEntered: (details) {
@@ -69,11 +73,11 @@ class _DropZoneState extends ConsumerState<DropZone> {
           height: 180,
           decoration: AppTheme.glassDecoration(
             borderRadius: 20,
-            color: _isDragging 
-                ? AppTheme.accentColor.withAlpha(50) 
+            color: _isDragging
+                ? AppTheme.accentColor.withAlpha(50)
                 : AppTheme.cardColor,
-            borderColor: _isDragging 
-                ? AppTheme.accentColor 
+            borderColor: _isDragging
+                ? AppTheme.accentColor
                 : AppTheme.cardBorderColor,
           ),
           child: Stack(
@@ -97,17 +101,23 @@ class _DropZoneState extends ConsumerState<DropZone> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Icon(
-                      _isDragging ? Icons.downloading : Icons.add_photo_alternate_outlined,
+                      _isDragging
+                          ? Icons.downloading
+                          : Icons.add_photo_alternate_outlined,
                       size: 48,
-                      color: _isDragging ? AppTheme.secondaryAccent : AppTheme.textPrimaryColor,
+                      color: _isDragging
+                          ? AppTheme.secondaryAccent
+                          : AppTheme.textPrimaryColor,
                     ),
                     const SizedBox(height: 16),
                     Text(
                       _isDragging ? 'ここにドロップ！' : '画像をドラッグ＆ドロップ、またはクリックして選択',
                       style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                            fontWeight: FontWeight.w600,
-                            color: _isDragging ? AppTheme.secondaryAccent : AppTheme.textPrimaryColor,
-                          ),
+                        fontWeight: FontWeight.w600,
+                        color: _isDragging
+                            ? AppTheme.secondaryAccent
+                            : AppTheme.textPrimaryColor,
+                      ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: 8),

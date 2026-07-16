@@ -20,8 +20,8 @@ class ImageGrid extends ConsumerWidget {
           child: Text(
             '追加された画像がありません。\n上のエリアに画像をドロップしてください。',
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: AppTheme.textSecondaryColor,
-                ),
+              color: AppTheme.textSecondaryColor,
+            ),
             textAlign: TextAlign.center,
           ),
         ),
@@ -36,17 +36,15 @@ class ImageGrid extends ConsumerWidget {
           children: [
             Text(
               'プレビューと並び替え (${state.images.length}枚)',
-              style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
             ),
             TextButton.icon(
               onPressed: () => notifier.clearAll(),
               icon: const Icon(Icons.delete_sweep_outlined, size: 18),
               label: const Text('すべてクリア'),
-              style: TextButton.styleFrom(
-                foregroundColor: Colors.redAccent,
-              ),
+              style: TextButton.styleFrom(foregroundColor: Colors.redAccent),
             ),
           ],
         ),
@@ -78,10 +76,7 @@ class ImageGrid extends ConsumerWidget {
                 clipBehavior: Clip.antiAlias,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.white24,
-                    width: 1,
-                  ),
+                  border: Border.all(color: Colors.white24, width: 1),
                 ),
                 child: Stack(
                   children: [
@@ -89,8 +84,8 @@ class ImageGrid extends ConsumerWidget {
                     Positioned.fill(
                       child: Image.memory(
                         imageModel.previewBytes,
-                        fit: state.fitMode == FitMode.fit 
-                            ? BoxFit.contain 
+                        fit: state.fitMode == FitMode.fit
+                            ? BoxFit.contain
                             : BoxFit.cover,
                       ),
                     ),
@@ -99,7 +94,10 @@ class ImageGrid extends ConsumerWidget {
                       top: 8,
                       left: 8,
                       child: Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 4,
+                        ),
                         decoration: BoxDecoration(
                           color: Colors.black.withAlpha(150),
                           borderRadius: BorderRadius.circular(12),

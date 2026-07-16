@@ -52,7 +52,9 @@ class ImageMergerNotifier extends StateNotifier<ImageMergerState> {
   final _uuid = const Uuid();
 
   /// 画像ファイルをバイトデータから追加する
-  Future<void> addImagesFromBytes(List<({String name, Uint8List bytes})> files) async {
+  Future<void> addImagesFromBytes(
+    List<({String name, Uint8List bytes})> files,
+  ) async {
     state = state.copyWith(isProcessing: true);
 
     final newImages = <ImageModel>[];
@@ -67,7 +69,9 @@ class ImageMergerNotifier extends StateNotifier<ImageMergerState> {
         final aspect = width / height;
 
         // プレビュー表示用にリサイズ
-        final previewBytes = await ImageMergerService.resizeForPreview(file.bytes);
+        final previewBytes = await ImageMergerService.resizeForPreview(
+          file.bytes,
+        );
 
         newImages.add(
           ImageModel(
@@ -159,6 +163,7 @@ class ImageMergerNotifier extends StateNotifier<ImageMergerState> {
   }
 }
 
-final imageMergerProvider = StateNotifierProvider<ImageMergerNotifier, ImageMergerState>((ref) {
-  return ImageMergerNotifier();
-});
+final imageMergerProvider =
+    StateNotifierProvider<ImageMergerNotifier, ImageMergerState>((ref) {
+      return ImageMergerNotifier();
+    });

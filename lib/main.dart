@@ -99,7 +99,10 @@ class ImageMergerHomePage extends StatelessWidget {
               children: [
                 // アプリケーションバー風のタイトルエリア
                 Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 16,
+                  ),
                   child: Row(
                     children: [
                       Container(
@@ -107,9 +110,14 @@ class ImageMergerHomePage extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: AppTheme.accentColor.withAlpha(40),
                           borderRadius: BorderRadius.circular(12),
-                          border: Border.all(color: AppTheme.accentColor.withAlpha(100)),
+                          border: Border.all(
+                            color: AppTheme.accentColor.withAlpha(100),
+                          ),
                         ),
-                        child: const Icon(Icons.grid_on, color: AppTheme.secondaryAccent),
+                        child: const Icon(
+                          Icons.grid_on,
+                          color: AppTheme.secondaryAccent,
+                        ),
                       ),
                       const SizedBox(width: 16),
                       Column(
@@ -129,12 +137,15 @@ class ImageMergerHomePage extends StatelessWidget {
                     ],
                   ),
                 ),
-                
+
                 // コンテンツ本体のレイアウト
                 Expanded(
                   child: SingleChildScrollView(
-                    padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    child: isWideScreen 
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    child: isWideScreen
                         ? Row(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
@@ -152,10 +163,7 @@ class ImageMergerHomePage extends StatelessWidget {
                               ),
                               const SizedBox(width: 24),
                               // 右カラム：設定パネル（スクロール追従・固定長）
-                              const SizedBox(
-                                width: 360,
-                                child: ControlPanel(),
-                              ),
+                              const SizedBox(width: 360, child: ControlPanel()),
                             ],
                           )
                         : Column(

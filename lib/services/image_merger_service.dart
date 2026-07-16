@@ -5,14 +5,11 @@ import 'package:flutter/material.dart' show Color;
 import '../models/image_model.dart';
 
 enum FitMode {
-  fit,   // アスペクト比維持・余白あり
-  cover  // アスペクト比維持・切り抜き
+  fit, // アスペクト比維持・余白あり
+  cover, // アスペクト比維持・切り抜き
 }
 
-enum OutputFormat {
-  png,
-  jpeg
-}
+enum OutputFormat { png, jpeg }
 
 class ImageMergeParams {
   final List<ImageModel> images;
@@ -45,11 +42,17 @@ class ImageMergerService {
   }
 
   /// プレビュー用の縮小画像を生成する
-  static Future<Uint8List> resizeForPreview(Uint8List originalBytes, {int maxDimension = 300}) async {
+  static Future<Uint8List> resizeForPreview(
+    Uint8List originalBytes, {
+    int maxDimension = 300,
+  }) async {
     if (kIsWeb) {
       return _executeResize(originalBytes, maxDimension);
     } else {
-      return compute((args) => _executeResize(args[0] as Uint8List, args[1] as int), [originalBytes, maxDimension]);
+      return compute(
+        (args) => _executeResize(args[0] as Uint8List, args[1] as int),
+        [originalBytes, maxDimension],
+      );
     }
   }
 
@@ -107,11 +110,16 @@ class ImageMergerService {
     final int margin = params.margin;
 
     // キャンバスの総サイズ計算
-    final int totalWidth = columnCount * maxCellWidth + (columnCount + 1) * margin;
+    final int totalWidth =
+        columnCount * maxCellWidth + (columnCount + 1) * margin;
     final int totalHeight = rowCount * maxCellHeight + (rowCount + 1) * margin;
 
     // キャンバス作成と背景色の塗りつぶし
-    final canvas = img.Image(width: totalWidth, height: totalHeight, numChannels: 4);
+    final canvas = img.Image(
+      width: totalWidth,
+      height: totalHeight,
+      numChannels: 4,
+    );
     final bgColor = img.ColorRgba8(
       params.backgroundColor.red,
       params.backgroundColor.green,
@@ -145,8 +153,13 @@ class ImageMergerService {
           targetWidth = (maxCellHeight * srcAspect).round();
         }
 
-        final resized = img.copyResize(srcImage, width: targetWidth, height: targetHeight, interpolation: img.Interpolation.average);
-        
+        final resized = img.copyResize(
+          srcImage,
+          width: targetWidth,
+          height: targetHeight,
+          interpolation: img.Interpolation.average,
+        );
+
         // セルの内部に余白を考慮して中央に配置するための黒・または透明な土台画像を作る
         // ただし、直接キャンバスに配置するので、土台を作らずオフセットを計算してマージする
         final offsetX = ((maxCellWidth - targetWidth) / 2).round();
@@ -174,7 +187,12 @@ class ImageMergerService {
           targetHeight = (maxCellWidth / srcAspect).round();
         }
 
-        final resized = img.copyResize(srcImage, width: targetWidth, height: targetHeight, interpolation: img.Interpolation.average);
+        final resized = img.copyResize(
+          srcImage,
+          width: targetWidth,
+          height: targetHeight,
+          interpolation: img.Interpolation.average,
+        );
 
         // 中央切り抜きの開始位置
         final cropX = ((targetWidth - maxCellWidth) / 2).round();
