@@ -113,15 +113,23 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run environment diagnostics
-        # ビルド失敗時にVisual Studio等のツールチェーンの問題を追跡しやすくするためログを出力
-        run: flutter doctor -v
+      - name: Print light environment metadata
+        # 成功/失敗時の比較用に、一瞬で終わる軽量な環境情報をログに残します（ツールの欠損でCIが落ちないよう保護）
+        run: |
+          flutter --version || true
+          cmake --version || true
+          ninja --version || true
 
       - name: Build Windows App
         # workflow_dispatch時は選択されたモード、自動実行時はreleaseモードでビルド
         env:
           BUILD_MODE: ${{ inputs.build_mode || 'release' }}
         run: flutter build windows --"$env:BUILD_MODE"
+
+      - name: Run detailed environment diagnostics on failure
+        # ビルド失敗時のみ、詳細な診断を実行して異常箇所を特定します
+        if: failure()
+        run: flutter doctor -v
 
       - name: Upload Windows Artifact
         uses: actions/upload-artifact@v4
@@ -163,15 +171,23 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run environment diagnostics
-        # Linuxビルド環境（ツールチェーン、ライブラリ）の認識確認用ログ
-        run: flutter doctor -v
+      - name: Print light environment metadata
+        # 成功/失敗時の比較用に、一瞬で終わる軽量な環境情報をログに残します（ツールの欠損でCIが落ちないよう保護）
+        run: |
+          flutter --version || true
+          cmake --version || true
+          ninja --version || true
 
       - name: Build Linux App
         # workflow_dispatch時は選択されたモード、自動実行時はreleaseモードでビルド
         env:
           BUILD_MODE: ${{ inputs.build_mode || 'release' }}
         run: flutter build linux --"$BUILD_MODE"
+
+      - name: Run detailed environment diagnostics on failure
+        # ビルド失敗時のみ、詳細な診断を実行して異常箇所を特定します
+        if: failure()
+        run: flutter doctor -v
 
       - name: Upload Linux Artifact
         uses: actions/upload-artifact@v4
